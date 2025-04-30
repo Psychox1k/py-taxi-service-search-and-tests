@@ -4,7 +4,7 @@ from taxi.forms import DriverCreationForm
 
 
 class FormsTest(TestCase):
-    def test_driver_creation_form_with_licence_first_last_name_is_valid(self):
+    def test_driver_creation_form_with_licence_first_last_name_is_valid(self) -> None:
         form_data = {
             "username": "usertest",
             "password1": "StrongPass123!",
@@ -17,9 +17,13 @@ class FormsTest(TestCase):
 
         self.assertTrue(form.is_valid(), msg=form.errors)
 
-        expected_fields = ["username",
-                           "first_name",
-                           "last_name",
-                           "license_number"]
+        expected_fields = ["username", "first_name",
+                           "last_name", "license_number"]
         for field in expected_fields:
-            self.assertEqual(form.cleaned_data[field], form_data[field])
+            self.assertIn(field, form.cleaned_data)
+            self.assertEqual(
+                form.cleaned_data[field],
+                form_data[field],
+                msg=f"Field '{field}' doesn't match:"
+                    f" {form.cleaned_data[field]} != {form_data[field]}"
+            )
